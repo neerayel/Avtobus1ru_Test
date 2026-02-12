@@ -13,34 +13,48 @@ namespace Avtobus1ru_Test.Data.Repositories
             this.dbContext = dbContext;
         }
 
-        public Task<LinkEntity> CreateAsync(LinkEntity item)
+        public async Task<LinkEntity> CreateAsync(LinkEntity item)
         {
-            throw new NotImplementedException();
+            await dbContext.Links.AddAsync(item);
+            await dbContext.SaveChangesAsync();
+
+            return item;
         }
 
-        public Task DeleteAsync(string id)
+        public async Task<List<LinkEntity>> GetAllAsync()
         {
-            throw new NotImplementedException();
+            return await dbContext.Links.ToListAsync();
         }
 
-        public Task<List<LinkEntity>> GetAllAsync()
+        public async Task<LinkEntity> GetByIdAsync(int id)
         {
-            throw new NotImplementedException();
+            return await dbContext.Links.FirstOrDefaultAsync(x => x.Id == id);
         }
 
-        public Task<LinkEntity> GetByIdAsync(string id)
+        public async Task<LinkEntity> GetLongFromShortAsync(string shortURLKey)
         {
-            throw new NotImplementedException();
+            return await dbContext.Links.FirstOrDefaultAsync(x => x.ShortURLKey == shortURLKey);
         }
 
-        public Task<List<LinkEntity>> GetLongFromShortAsync()
+        public async Task<List<LinkEntity>> GetShortFromLongAsync(string longURL)
         {
-            throw new NotImplementedException();
+            return await dbContext.Links.Where(x => x.LongURL == longURL).ToListAsync();
         }
 
-        public Task UpdateAsync(LinkEntity item)
+        public async Task UpdateAsync(LinkEntity item)
         {
-            throw new NotImplementedException();
+            dbContext.Links.Update(item);
+            await dbContext.SaveChangesAsync();
+        }
+
+        public async Task DeleteAsync(int id)
+        {
+            var item = await dbContext.Links.FirstOrDefaultAsync(x => x.Id == id);
+            if (item != null)
+            {
+                dbContext.Links.Remove(item);
+                await dbContext.SaveChangesAsync();
+            }
         }
     }
 }
