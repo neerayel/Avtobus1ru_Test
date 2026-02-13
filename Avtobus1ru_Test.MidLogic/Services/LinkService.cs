@@ -12,36 +12,59 @@ namespace Avtobus1ru_Test.MidLogic.Services
             _linkRepository = linkRepository;
         }
 
-        public async Task<LinkModel> CreateAsync(string longURL)
+        public async Task<bool> CreateAsync(string longURL)
         {
+            if (String.IsNullOrWhiteSpace(longURL)) return false;
+
             var newLink = await _linkRepository.CreateAsync( Mapper.NewLink(longURL) );
-            return Mapper.LinkEntityToModel(newLink);
+            return true;
         }
 
-        public async Task<List<LinkModel>> GetAllAsync()
+        public async Task<List<LinkModel>> GetAllAsync(string redirrectionURL)
         {
             var links = await _linkRepository.GetAllAsync();
-            return links.Select(Mapper.LinkEntityToModel).ToList();
+            var models = links.Select(Mapper.LinkEntityToModel).ToList();
+            foreach(var model in models)
+            {
+                model.ShortURL = redirrectionURL + model.ShortURLKey;
+            }
+            return models;
         }
 
         public async Task<LinkModel> GetByIdAsync(int id)
         {
+            if (id < 0) return new LinkModel();
+
             return Mapper.LinkEntityToModel( await _linkRepository.GetByIdAsync(id) );
         }
 
         public async Task<string> GetLongFromShortAsync(string shortURLkey)
         {
-            return (await _linkRepository.GetLongFromShortAsync(shortURLkey)).LongURL;
+            if (String.IsNullOrWhiteSpace(shortURLkey)) return "";
+
+            var linkEntity = await _linkRepository.GetLongFromShortAsync(shortURLkey);
+            linkEntity.ClickCount += 1;
+            await _linkRepository.UpdateAsync(linkEntity);
+
+            return linkEntity.LongURL;
         }
 
-        public async Task UpdateAsync(LinkModel item)
+        public async Task<bool> UpdateAsync(LinkModel item)
         {
+            if (item == null) return false;
+
+            var newItem = Mapper.UpdateLink(item.Id, item.LongURL);
+
             await _linkRepository.UpdateAsync(Mapper.LinkModelToEntity(item));
+            return true;
         }
 
-        public async Task DeleteAsync(int id)
+        public async Task<bool> DeleteAsync(int id)
         {
+            if (id < 0) return false;
+
             await _linkRepository.DeleteAsync(id);
+            return true;
         }
     }
 }

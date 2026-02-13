@@ -36,16 +36,28 @@ namespace Avtobus1ru_Test.MidLogic.Services
             return new LinkEntity
             {
                 LongURL = longURL,
-                ShortURLKey = GuidGenerator(),
+                ShortURLKey = IdGenerator(),
+                CreationDate = DateTime.Now,
+                ClickCount = 0,
+            };
+        }
+
+        public static LinkEntity UpdateLink(int id, string longURL)
+        {
+            return new LinkEntity
+            {
+                Id = id,
+                LongURL = longURL,
+                ShortURLKey = IdGenerator(),
                 CreationDate = DateTime.Now,
                 ClickCount = 0,
             };
         }
 
 
-        public static string GuidGenerator()
+        public static string IdGenerator()
         {
-            return Guid.NewGuid().ToString();
+            return Convert.ToBase64String(Guid.NewGuid().ToByteArray()).Replace("/", "");
         }
     }
 }

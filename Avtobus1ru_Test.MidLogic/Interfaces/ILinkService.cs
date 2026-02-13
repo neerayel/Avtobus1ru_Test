@@ -4,11 +4,11 @@ namespace Avtobus1ru_Test.MidLogic.Interfaces
 {
     public interface ILinkService
     {
-        Task<LinkModel> CreateAsync(string longURL);
-        Task<List<LinkModel>> GetAllAsync();
+        Task<bool> CreateAsync(string longURL);
+        Task<List<LinkModel>> GetAllAsync(string redirrectionURL);
         Task<LinkModel> GetByIdAsync(int id);
         Task<string> GetLongFromShortAsync(string shortURL);
-        Task UpdateAsync(LinkModel item);
-        Task DeleteAsync(int id);
+        Task<bool> UpdateAsync(LinkModel item);
+        Task<bool> DeleteAsync(int id);
     }
 }
