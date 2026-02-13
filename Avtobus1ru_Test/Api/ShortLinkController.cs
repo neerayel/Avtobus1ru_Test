@@ -4,21 +4,21 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace LX.TestPad.Api
 {
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     [ApiController]
-    public class RedirectionController : ControllerBase
+    public class ShortLinkController : ControllerBase
     {
         private readonly ILogger<HomeController> _logger;
         private readonly ILinkService _linkService;
 
-        public RedirectionController(ILogger<HomeController> logger, ILinkService linkService)
+        public ShortLinkController(ILogger<HomeController> logger, ILinkService linkService)
         {
             _logger = logger;
             _linkService = linkService;
         }
 
 
-        [HttpGet("shortLink/{shortURLkey}")]
+        [HttpGet("{shortURLkey}")]
         public async Task<IActionResult> RedirectFromShortToLong(string shortURLkey)
         {
             string longURL = await _linkService.GetLongFromShortAsync(shortURLkey);
