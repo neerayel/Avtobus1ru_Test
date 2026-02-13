@@ -12,6 +12,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Avtobus1ru_Test.MidLogic", 
 		{A8F6279C-D02F-496D-B88B-8035370C7ED2} = {A8F6279C-D02F-496D-B88B-8035370C7ED2}
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Avtobus1ru_Test.Tests", "Avtobus1ru_Test.Tests\Avtobus1ru_Test.Tests.csproj", "{0C831794-9089-4637-81B0-E3202D4611A4}"
+	ProjectSection(ProjectDependencies) = postProject
+		{36686A03-4E52-475A-9D5A-11DE4A9A80C8} = {36686A03-4E52-475A-9D5A-11DE4A9A80C8}
+		{A8F6279C-D02F-496D-B88B-8035370C7ED2} = {A8F6279C-D02F-496D-B88B-8035370C7ED2}
+		{D08A615F-0C4B-4E8C-A5B1-8C92C4370898} = {D08A615F-0C4B-4E8C-A5B1-8C92C4370898}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -30,6 +37,10 @@ Global
 		{D08A615F-0C4B-4E8C-A5B1-8C92C4370898}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D08A615F-0C4B-4E8C-A5B1-8C92C4370898}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D08A615F-0C4B-4E8C-A5B1-8C92C4370898}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0C831794-9089-4637-81B0-E3202D4611A4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0C831794-9089-4637-81B0-E3202D4611A4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0C831794-9089-4637-81B0-E3202D4611A4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0C831794-9089-4637-81B0-E3202D4611A4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
