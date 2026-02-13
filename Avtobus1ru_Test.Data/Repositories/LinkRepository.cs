@@ -16,7 +16,15 @@ namespace Avtobus1ru_Test.Data.Repositories
         public async Task<LinkEntity> CreateAsync(LinkEntity item)
         {
             await dbContext.Links.AddAsync(item);
-            await dbContext.SaveChangesAsync();
+
+            try
+            {
+                await dbContext.SaveChangesAsync();
+            }
+            catch (Exception e)
+            {
+                return new LinkEntity();
+            }
 
             return item;
         }
@@ -41,20 +49,39 @@ namespace Avtobus1ru_Test.Data.Repositories
             return await dbContext.Links.Where(x => x.LongURL == longURL).ToListAsync();
         }
 
-        public async Task UpdateAsync(LinkEntity item)
+        public async Task<bool> UpdateAsync(LinkEntity item)
         {
             dbContext.Links.Update(item);
-            await dbContext.SaveChangesAsync();
+
+            try
+            {
+                await dbContext.SaveChangesAsync();
+            }
+            catch (Exception e)
+            {
+                return false;
+            }
+
+            return true;
         }
 
-        public async Task DeleteAsync(int id)
+        public async Task<bool> DeleteAsync(int id)
         {
             var item = await dbContext.Links.FirstOrDefaultAsync(x => x.Id == id);
             if (item != null)
             {
                 dbContext.Links.Remove(item);
-                await dbContext.SaveChangesAsync();
+                try
+                {
+                    await dbContext.SaveChangesAsync();
+                }
+                catch (Exception e)
+                {
+                    return false;
+                }
             }
+
+            return true;
         }
     }
 }
