@@ -1,4 +1,8 @@
-﻿using Avtobus1ru_Test.MidLogic.Models;
+﻿using Avtobus1ru_Test.Data;
+using Avtobus1ru_Test.Data.Repositories;
+using Avtobus1ru_Test.MidLogic.Models;
+using Avtobus1ru_Test.MidLogic.Services;
+using Microsoft.EntityFrameworkCore;
 
 namespace Avtobus1ru_Test.Tests
 {
@@ -6,57 +10,77 @@ namespace Avtobus1ru_Test.Tests
     {
         static LinkModel testModel = new LinkModel()
         {
-            Id = 0,
+            Id = 1,
             LongURL = "https://www.fake-url.com",
             ShortURLKey = "ab593c12-0188-400f-8764-261e9d3efd35",
-            ShortURL = "https://localhost:7251/shortlink/ab593c12-0188-400f-8764-261e9d3efd35",
+            ShortURL = "",
             CreationDate = new DateTime(2026, 2, 13, 12, 0, 0),
             ClickCount = 1
         };
+        static string testHostURL = "https://localhost:7251/r/";
 
-        static List<LinkModel> linkEntities = new List<LinkModel> { testModel };
 
+        private LinkService GetService()
+        {
+            var optionsBuilder = new DbContextOptionsBuilder<DataContext>().UseInMemoryDatabase(Guid.NewGuid().ToString());
+            var context = new DataContext(optionsBuilder.Options);
+            var repo = new LinkRepository(context);
+            return new LinkService(repo);
+        }
 
         [Fact]
         public async Task CreateTest()
         {
-            Assert.True(false);
+            var service = GetService();
+
+            bool result = await service.CreateAsync(testModel.LongURL);
+
+            Assert.True(result);
         }
 
         [Fact]
         public async Task GetAllTest()
         {
-            Assert.True(false);
+            var service = GetService();
+
+            await service.CreateAsync(testModel.LongURL);
+            var result = await service.GetAllAsync(testHostURL);
+
+            Assert.Single(result);
         }
 
         [Fact]
         public async Task GetByIdTest()
         {
-            Assert.True(false);
-        }
+            var service = GetService();
 
-        [Fact]
-        public async Task GetLongFromShortTest()
-        {
-            Assert.True(false);
-        }
+            await service.CreateAsync(testModel.LongURL);
+            var result = await service.GetByIdAsync(testModel.Id);
 
-        [Fact]
-        public async Task GetShortFromLongTest()
-        {
-            Assert.True(false);
+            Assert.NotNull(result);
         }
 
         [Fact]
         public async Task UpdateTest()
         {
-            Assert.True(false);
+            var service = GetService();
+
+            await service.CreateAsync("EMPTY");
+            await service.UpdateAsync(testModel);
+            var result = await service.GetByIdAsync(testModel.Id);
+
+            Assert.Equivalent(testModel, result);
         }
 
         [Fact]
         public async Task DeleteTest()
         {
-            Assert.True(false);
+            var service = GetService();
+
+            await service.CreateAsync(testModel.LongURL);
+            bool result = await service.DeleteAsync(testModel.Id);
+
+            Assert.True(result);
         }
     }
 }
