@@ -14,6 +14,7 @@ namespace Avtobus1ru_Test.MidLogic.Services
 
         public async Task<bool> CreateAsync(string longURL)
         {
+            longURL = longURL.Trim();
             if (String.IsNullOrWhiteSpace(longURL)) return false;
 
             var newLink = await _linkRepository.CreateAsync( Mapper.NewLink(longURL) );
@@ -40,6 +41,7 @@ namespace Avtobus1ru_Test.MidLogic.Services
 
         public async Task<string> GetLongFromShortAsync(string shortURLkey)
         {
+            shortURLkey = shortURLkey.Trim();
             if (String.IsNullOrWhiteSpace(shortURLkey)) return "";
 
             var linkEntity = await _linkRepository.GetLongFromShortAsync(shortURLkey);
