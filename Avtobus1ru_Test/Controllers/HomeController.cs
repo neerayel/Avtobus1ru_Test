@@ -1,6 +1,7 @@
 using Avtobus1ru_Test.MidLogic.Interfaces;
 using Avtobus1ru_Test.MidLogic.Models;
 using Avtobus1ru_Test.Models;
+using LX.TestPad.Api;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.Infrastructure.Internal;
 using System.Diagnostics;
@@ -19,9 +20,10 @@ namespace Avtobus1ru_Test.Controllers
         }
 
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(bool? prevOpResult = null)
         {
-            string redirrectionURL = $"{Request.Scheme}://{Request.Host}/shortlink/";
+            ViewBag.PrevOpResult = prevOpResult;
+            string redirrectionURL = $"{Request.Scheme}://{Request.Host}/r/";
             var linksData = await _linkService.GetAllAsync(redirrectionURL);
             return View(linksData);
         }
@@ -30,22 +32,22 @@ namespace Avtobus1ru_Test.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateNewLink(string longURL)
         {
-            await _linkService.CreateAsync(longURL);
-            return RedirectToAction(nameof(Index));
+            bool isSuccessful = await _linkService.CreateAsync(longURL);
+            return RedirectToAction(nameof(Index), new { prevOpResult=isSuccessful });
         }
 
         [HttpPost]
         public async Task<IActionResult> UpdateLink(LinkModel linkModel)
         {
-            await _linkService.UpdateAsync(linkModel);
-            return RedirectToAction(nameof(Index));
+            bool isSuccessful = await _linkService.UpdateAsync(linkModel);
+            return RedirectToAction(nameof(Index), new { prevOpResult = isSuccessful });
         }
 
-        [HttpPost]
+
         public async Task<IActionResult> DeleteLink(int id)
         {
-            await _linkService.DeleteAsync(id);
-            return RedirectToAction(nameof(Index));
+            bool isSuccessful = await _linkService.DeleteAsync(id);
+            return RedirectToAction(nameof(Index), new { prevOpResult = isSuccessful });
         }
 
 
