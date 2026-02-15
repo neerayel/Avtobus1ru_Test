@@ -1,10 +1,14 @@
 ﻿using Avtobus1ru_Test.Data.Entities;
-using LX.TestPad.DataAccess.Interfaces;
 
 namespace Avtobus1ru_Test.Data.Interfaces
 {
-    public interface ILinkRepository : IRepository<LinkEntity>
+    public interface ILinkRepository
     {
-        Task<List<LinkEntity>> GetLongFromShortAsync();
+        Task<LinkEntity> CreateAsync(LinkEntity item);
+        Task<List<LinkEntity>> GetAllAsync();
+        Task<LinkEntity> GetByIdAsync(int id);
+        Task<LinkEntity> GetLongFromShortAsync(string shortURLKey);
+        Task<bool> UpdateAsync(LinkEntity item);
+        Task<bool> DeleteAsync(int id);
     }
 }

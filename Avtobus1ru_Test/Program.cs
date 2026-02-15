@@ -1,8 +1,8 @@
-using Avtobus1ru_Test.Data;
+using Avtobus1ru_Test.MidLogic;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddEfRepository(builder.Configuration.GetConnectionString("MariaDbConnectionString"));
+builder.Services.AddBusinessLogicService(builder.Configuration.GetConnectionString("MariaDbConnectionString"));
 builder.Services.AddControllersWithViews();
 
 var app = builder.Build();

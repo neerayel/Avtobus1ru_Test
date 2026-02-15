@@ -13,34 +13,67 @@ namespace Avtobus1ru_Test.Data.Repositories
             this.dbContext = dbContext;
         }
 
-        public Task<LinkEntity> CreateAsync(LinkEntity item)
+        public async Task<LinkEntity> CreateAsync(LinkEntity item)
         {
-            throw new NotImplementedException();
+            try
+            {
+                await dbContext.Links.AddAsync(item);
+                await dbContext.SaveChangesAsync();
+            }
+            catch (Exception e)
+            {
+                return new LinkEntity();
+            }
+
+            return item;
         }
 
-        public Task DeleteAsync(string id)
+        public async Task<List<LinkEntity>> GetAllAsync()
         {
-            throw new NotImplementedException();
+            return await dbContext.Links.ToListAsync();
         }
 
-        public Task<List<LinkEntity>> GetAllAsync()
+        public async Task<LinkEntity> GetByIdAsync(int id)
         {
-            throw new NotImplementedException();
+            return await dbContext.Links.FirstOrDefaultAsync(x => x.Id == id);
         }
 
-        public Task<LinkEntity> GetByIdAsync(string id)
+        public async Task<LinkEntity> GetLongFromShortAsync(string shortURLKey)
         {
-            throw new NotImplementedException();
+            return await dbContext.Links.FirstOrDefaultAsync(x => x.ShortURLKey == shortURLKey);
         }
 
-        public Task<List<LinkEntity>> GetLongFromShortAsync()
+        public async Task<bool> UpdateAsync(LinkEntity item)
         {
-            throw new NotImplementedException();
+            try
+            {
+                if (await DeleteAsync(item.Id)) await CreateAsync(item);
+            }
+            catch (Exception e)
+            {
+                return false;
+            }
+
+            return true;
         }
 
-        public Task UpdateAsync(LinkEntity item)
+        public async Task<bool> DeleteAsync(int id)
         {
-            throw new NotImplementedException();
+            var item = await dbContext.Links.FirstOrDefaultAsync(x => x.Id == id);
+            if (item != null)
+            {
+                try
+                {
+                    dbContext.Links.Remove(item);
+                    await dbContext.SaveChangesAsync();
+                }
+                catch (Exception e)
+                {
+                    return false;
+                }
+            }
+
+            return true;
         }
     }
 }
