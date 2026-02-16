@@ -1,0 +1,121 @@
+﻿@model List<URLShortener.MidLogic.Models.LinkModel>
+
+
+@{
+    ViewData["Title"] = "URL Shortener";
+}
+
+<div class="text-center">
+
+    <div class="container">
+        <h1 class="display-4">Welcome to URL shortener</h1>
+
+        <div class="my-5">
+            <form asp-action="CreateNewLink" method="post">
+                <div asp-validation-summary="All" class="text-danger"></div>
+                <div class="row mb-5">
+                    <div class="col">
+                        <input type="url" name="LongURL" placeholder="Enter your URL to make it a bit shorter" class="form-control" />
+                    </div>
+                    <div class="col-auto">
+                        <input type="submit" value="Make shorter" class="btn btn-primary mx-1" style="width: 120px;" />
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    @if (ViewBag.PrevOpResult != null)
+    {
+        @if (ViewBag.PrevOpResult)
+        {
+            <div class="container text-center bg-success">
+                <p class="text-light">Successful operation</p>
+            </div>
+        }
+        else
+        {
+            <div class="container text-center bg-danger">
+                <p class="text-dark">Error during operation</p>
+            </div>
+        }
+    }
+    
+
+    <div class="container-xxxl container">
+        <table class="table table-striped table-hover">
+            <thead>
+                <tr>
+                    <th scope="col" class="col-3">Original URL</th>
+                    <th scope="col" class="col-3">Short URL</th>
+                    <th scope="col" class="col-2">Creation date</th>
+                    <th scope="col" class="col-2">Clicks count</th>
+                    <th scope="col" class="col-2">Controls</th>
+                </tr>
+            </thead>
+            
+            <tbody>
+                @foreach (var linkItem in Model)
+                {
+                    <form asp-action="UpdateLink" method="post">
+                        <input name="Id" asp-for="@linkItem.Id" style="display:none"/>
+                        <tr>
+                            <td>
+                                <a id="LinkData-@linkItem.Id" href="@linkItem.LongURL">@linkItem.LongURL</a>
+                                <input id="LongURL-@linkItem.Id" type="url" class="form-control" name="LongURL" asp-for="@linkItem.LongURL" style="display:none" required />
+                            </td>
+
+                            <td>
+                                <a href="@linkItem.ShortURL">@linkItem.ShortURL</a>
+                                <input name="ShortURLKey" asp-for="@linkItem.ShortURLKey" style="display:none" />
+                            </td>
+                            <td>
+                                @linkItem.CreationDate.ToString()
+                                <input name="CreationDate" asp-for="@linkItem.CreationDate" style="display:none" />
+                            </td>
+                            <td>
+                                @linkItem.ClickCount
+                                <input name="ClickCount" asp-for="@linkItem.ClickCount" style="display:none" />
+                            </td>
+
+                            <td>
+                            <div class="row">
+                                <input type="button" value="Edit" id="editButton-@linkItem.Id" onclick="toggleEditingById(@linkItem.Id)" class="col btn btn-outline-secondary mx-2" />
+                                <a id="deleteButton-@linkItem.Id" asp-action="DeleteLink" asp-route-Id=@linkItem.Id class="col btn btn-sm btn-outline-danger mx-2">Delete</a>
+
+                                <input type="submit" value="Save" id="saveButton-@linkItem.Id" style="display:none" class="col btn btn-sm btn-outline-success mx-2" />
+                                <input type="button" value="Cancel" id="cancelButton-@linkItem.Id" onclick="cancelEditingById(@linkItem.Id)" style="display:none" class="col btn btn-sm btn-outline-secondary mx-2" />
+                                </div>
+                            </td>
+                        </tr>
+                    </form>
+                   
+                }
+            </tbody>
+        </table>
+    </div>
+
+</div>
+
+
+
+<script>
+    function applyStyleFor(elements, styleName, value) {
+        for (var i = 0; i < elements.length; i++) {
+            var element = document.getElementById(elements[i]);
+            if (element) {
+                element.style[styleName] = value;
+            }
+        }
+    }
+
+    function toggleEditingById(id) {
+        applyStyleFor(["LongURL-" + id, "saveButton-" + id, "cancelButton-" + id], "display", "inline");
+        applyStyleFor(["LinkData-" + id, "editButton-" + id, "deleteButton-" + id], "display", "none");
+    }
+
+    function cancelEditingById(id) {
+        applyStyleFor(["LinkData-" + id, "editButton-" + id, "deleteButton-" + id], "display", "inline");
+        applyStyleFor(["saveButton-" + id, "cancelButton-" + id, "LongURL-" + id], "display", "none");
+    }
+</script>
