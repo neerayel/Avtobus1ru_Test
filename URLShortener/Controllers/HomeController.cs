@@ -1,9 +1,7 @@
 using URLShortener.MidLogic.Interfaces;
 using URLShortener.MidLogic.Models;
 using URLShortener.Models;
-using LX.TestPad.Api;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore.Infrastructure.Internal;
 using System.Diagnostics;
 
 namespace URLShortener.Controllers

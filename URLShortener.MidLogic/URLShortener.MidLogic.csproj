@@ -11,7 +11,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Avtobus1ru_Test.Data\URLShortener.Data.csproj" />
+    <ProjectReference Include="..\URLShortener.Data\URLShortener.Data.csproj" />
+    <ProjectReference Include="..\URLShortener.Data\URLShortener.Data.csproj" />
   </ItemGroup>
 
 </Project>
